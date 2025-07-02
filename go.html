@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Perfect Digital Clock</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: linear-gradient(135deg, #000428, #004e92);
+            --bg-light: linear-gradient(135deg, #fdfbfb, #ebedee);
+            --text-dark: #00fff7;
+            --text-light: #1a1a1a;
+            --glass-dark: rgba(255, 255, 255, 0.1);
+            --glass-light: rgba(255, 255, 255, 0.7);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Orbitron', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: var(--bg-dark);
+            color: var(--text-dark);
+            transition: all 0.8s ease;
+        }
+
+        body.light-mode {
+            background: var(--bg-light);
+            color: var(--text-light);
+        }
+
+        .clock-container {
+            background: var(--glass-dark);
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            padding: 60px 90px;
+            border-radius: 25px;
+            text-align: center;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 0 60px rgba(0, 255, 255, 0.3);
+            animation: float 6s ease-in-out infinite;
+            position: relative;
+            transition: all 0.8s ease;
+        }
+
+        body.light-mode .clock-container {
+            background: var(--glass-light);
+            border-color: rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.1);
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-12px);
+            }
+        }
+
+        .time {
+            font-size: 80px;
+            letter-spacing: 4px;
+            text-shadow: 0 0 15px var(--text-dark);
+            transition: all 0.4s;
+        }
+
+        body.light-mode .time {
+            text-shadow: none;
+        }
+
+        .date {
+            font-size: 24px;
+            margin-top: 15px;
+            opacity: 0.8;
+        }
+
+        .toggle-btn {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 14px;
+            border: 2px solid currentColor;
+            background: transparent;
+            cursor: pointer;
+            font-weight: bold;
+            color: inherit;
+            transition: 0.4s ease;
+        }
+
+        .toggle-btn:hover {
+            background: currentColor;
+            color: white;
+        }
+
+        @media (max-width: 600px) {
+            .clock-container {
+                padding: 30px;
+            }
+
+            .time {
+                font-size: 50px;
+            }
+
+            .date {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="clock-container">
+        <button class="toggle-btn" onclick="toggleTheme()">🌙 / ☀️</button>
+        <div id="time" class="time">00:00:00 AM</div>
+        <div id="date" class="date">Loading date...</div>
+    </div>
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+            let hours = now.getHours();
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12 || 12;
+            const mins = String(now.getMinutes()).padStart(2, '0');
+            const secs = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('time').textContent = `${hours}:${mins}:${secs} ${ampm}`;
+
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const dateStr = now.toLocaleDateString('en-US', options);
+            document.getElementById('date').textContent = dateStr;
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+        }
+
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
+
+</body>
+
+</html>
